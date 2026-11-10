@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recettes protéinées</title>
+  <meta name="description" content="Recettes équilibrées et riches en protéines, sans four : plats rapides, mijotés de grand-mère et potages, avec coût par repas.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d9622b'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle'%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#c9541f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Recettes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="entete">
+    <div class="marque">
+      <span class="logo" aria-hidden="true">🍳</span>
+      <div>
+        <h1>Recettes protéinées</h1>
+        <p class="sous-titre">Plaques + micro-ondes · sans four · ingrédients de supérette</p>
+      </div>
+    </div>
+    <nav class="onglets" aria-label="Sections">
+      <a href="#" data-vue="recettes">Recettes <b id="nb-recettes"></b></a>
+      <a href="#favoris" data-vue="favoris">Favoris <b id="nb-favoris"></b></a>
+      <a href="#courses" data-vue="courses">Courses <b id="nb-courses"></b></a>
+    </nav>
+    <button type="button" id="btn-theme" class="discret icone" aria-label="Changer de thème" title="Thème clair / sombre">◐</button>
+  </header>
+
+  <main>
+    <section id="vue-recettes" aria-label="Recettes">
+      <form class="filtres" id="filtres" onsubmit="return false">
+        <input type="search" id="f-texte" placeholder="Rechercher une recette ou un ingrédient (poireau, thon…)" aria-label="Rechercher">
+        <div class="puces" id="f-proteine" role="group" aria-label="Protéine"></div>
+        <details class="plus-filtres" id="plus-filtres">
+        <summary>Temps, type de plat, coût, cuisson, tri…</summary>
+        <div class="selects">
+          <label>Temps total
+            <select id="f-tempsMax">
+              <option value="0">Peu importe</option>
+              <option value="10">10 min ou moins</option>
+              <option value="20">20 min ou moins</option>
+              <option value="30">30 min ou moins</option>
+              <option value="45">45 min ou moins</option>
+              <option value="60">1 h ou moins</option>
+              <option value="120">2 h ou moins</option>
+            </select>
+          </label>
+          <label>Type de plat
+            <select id="f-type"><option value="">Tous</option></select>
+          </label>
+          <label>Coût / portion
+            <select id="f-coutMax">
+              <option value="0">Peu importe</option>
+              <option value="1.5">1,50 € ou moins</option>
+              <option value="2.5">2,50 € ou moins</option>
+              <option value="3.5">3,50 € ou moins</option>
+            </select>
+          </label>
+          <label>Cuisson
+            <select id="f-materiel">
+              <option value="">Plaques et micro-ondes</option>
+              <option value="micro">Micro-ondes ou sans cuisson</option>
+              <option value="sans">Sans cuisson</option>
+              <option value="un">Un seul ustensile</option>
+            </select>
+          </label>
+          <label>Protéines / portion
+            <select id="f-protMin">
+              <option value="0">Toutes</option>
+              <option value="25">25 g et plus</option>
+              <option value="30">30 g et plus</option>
+              <option value="40">40 g et plus</option>
+            </select>
+          </label>
+          <label>Grouper par
+            <select id="o-groupe">
+              <option value="temps">Temps total</option>
+              <option value="proteine">Protéine principale</option>
+              <option value="type">Type de plat (mijotés, soupes…)</option>
+              <option value="aucun">Pas de groupe</option>
+            </select>
+          </label>
+          <label>Trier par
+            <select id="o-tri">
+              <option value="temps">Temps total</option>
+              <option value="proteines">Protéines (le plus d’abord)</option>
+              <option value="kcal">Calories (le moins d’abord)</option>
+              <option value="ratio">Protéines pour 100 kcal</option>
+              <option value="cout">Coût (le moins cher d’abord)</option>
+            </select>
+          </label>
+        </div>
+        <div class="cases">
+          <label class="case"><input type="checkbox" id="f-vege"> 🌱 Végétarien</label>
+          <label class="case"><input type="checkbox" id="f-batch"> 🧊 Se garde (batch cooking)</label>
+          <label class="case"><input type="checkbox" id="f-classique"> 🥖 Classiques français</label>
+          <button type="button" id="btn-frigo" class="discret" aria-expanded="false" aria-controls="frigo">🧺 Ce que j’ai…</button>
+          <button type="button" id="btn-reset" class="discret">Réinitialiser</button>
+        </div>
+        </details>
+        <div id="frigo" class="frigo" hidden>
+          <p class="muted">Coche ce que tu as sous la main : les recettes sont classées selon ce qu’il te manque (sel, huile, épices et bouillon ne comptent pas).</p>
+          <div class="frigo-actions">
+            <button type="button" class="discret" data-frigo="basiques">Mes basiques</button>
+            <button type="button" class="discret" data-frigo="vider">Tout décocher</button>
+          </div>
+          <div id="frigo-liste"></div>
+        </div>
+      </form>
+      <p id="resume" class="resume" aria-live="polite"></p>
+      <div id="liste"></div>
+    </section>
+
+    <section id="vue-courses" aria-label="Liste de courses" hidden></section>
+  </main>
+
+  <footer class="pied">
+    <p>Valeurs nutritionnelles <strong>estimées</strong> à partir de valeurs moyennes (ordres de grandeur de la table Ciqual de l’Anses et d’étiquettes courantes), à ± 10-15 %. Coûts estimés à partir de prix de supérette (type Carrefour City, fin 2026), à ± 20-30 %. Recettes inspirées des sites cités sur chaque fiche, réécrites et adaptées sans four.</p>
+  </footer>
+
+  <dialog id="fiche" aria-labelledby="fiche-titre"></dialog>
+
+  <script src="donnees.js"></script>
+  <script src="photos.js"></script>
+  <script src="logique.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

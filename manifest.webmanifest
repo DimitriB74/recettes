@@ -1,0 +1,16 @@
+{
+  "name": "Recettes protéinées",
+  "short_name": "Recettes",
+  "description": "Recettes équilibrées et riches en protéines, sans four : plats rapides, mijotés, potages et classiques français, avec coût par repas.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#c9541f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
